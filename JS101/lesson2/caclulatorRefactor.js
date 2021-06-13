@@ -9,6 +9,9 @@ function invalidNumber(number) {
 }
 
 console.log('Welcome to Calculator!');
+let restart = true;
+while (restart) {
+
 // Ask the user for the first number.
 prompt('What is the first number?');
 let firstAnswer = readline.question();
@@ -50,3 +53,14 @@ switch (operation) {
 
 // Print the result to the terminal.
 prompt(`The result is ${output}`);
+
+console.log('WOuld you like to use the calculator again? (Y/N)?');
+let answer = readline.question();
+
+if (answer[0].toLowerCase() === 'y') {
+  restart = true;
+} else
+  restart = false;
+}
+
+console.log('Goodbye!');
