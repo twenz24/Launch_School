@@ -46,17 +46,32 @@ function handValue(cards) {
   });
   return sumOfCards;
 }
-console.log(handValue([['C', '2'], ['S', '5'] ,['H', 'Ace']]));
-
-function busted() {
-  let hello;
-  return hello;
-}
+//console.log(handValue([['C', '2'], ['S', '5'] ,['H', 'Ace']]));
 
 function shuffle(array) {
   for (let index = array.length - 1; index > 0; index--) {
     let otherIndex = Math.floor(Math.random() * (index + 1)); // 0 to index
     [array[index], array[otherIndex]] = [array[otherIndex], array[index]]; // swap elements
+  }
+}
+
+function findWinner(firstHand, secondHand) {
+  let winner = '';
+  if (handValue(firstHand) > handValue(secondHand)) {
+    winner = 'You have won!';
+  } else if (handValue(firstHand) < handValue(secondHand)) {
+    winner = 'The dealer has won!';
+  } else {
+    winner = false;
+  }
+  return winner;
+}
+
+function busted(cards) {
+  if (handValue(cards) > 21) {
+    return true;
+  } else {
+    return false;
   }
 }
 
@@ -75,24 +90,60 @@ while (true) {
     ['C', 'Jack'],['C', 'Queen'],['C', 'King'],['C', 'Ace'], //hearts faces
   ];
   shuffle(deck);
-  let playerHand = [deck[0], deck[1]];
-  let dealerHand = [deck[2], deck[3]];
-  console.log(`Dealer has: ${dealerHand[0][1]} and unkown card`);
+  let playerHand = []; //find a way to use destructive
+  let dealerHand = [];
+
+  playerHand.push(deck.pop());
+  playerHand.push(deck.pop());
+  dealerHand.push(deck.pop());
+  dealerHand.push(deck.pop());
+
+  console.log(`Dealer has: ${dealerHand[0][1]} and unknown card`);
   console.log(`You have: ${playerHand[0][1]} and ${playerHand[1][1]}`);
+
   while (true) {
     console.log("hit or stay?");
     let answer = readline.question();
-    if (answer === 'stay' || busted()) break;
+
+    if (answer === 'stay' || busted(playerHand)) break;
+
     playerHand.push(deck.pop());
     console.log(`You currently have: ${handAsString(playerHand)}`);
   }
 
-  if (busted()) {
-    console.log('You Busted! would you like to play again? (Yes or No)'); //end game or ask user to play again?
-    let playAgain = readline.question();
-    if (playAgain.toLowerCase === 'no') break;
+  while (handValue(dealerHand) < 17) {
+    dealerHand.push(deck.pop());
+
+    if (busted(playerHand)) break;
+  }
+  console.log(`You have: ${handAsString(playerHand)}`);
+  console.log(`The Dealer has: ${handAsString(dealerHand)}`);
+
+
+  let bust = false;
+  if (busted(dealerHand)) {
+    console.log("The Dealer has busted! You win!");
+    bust = busted(dealerHand);
+  } else if (busted(playerHand)) {
+    console.log('You have busted! The Dealer wins!');
+    bust = busted(playerHand);
+  }
+  if (!findWinner(playerHand, dealerHand) && !bust) {
+    console.log("It's a tie!");
+  } else if (!bust) {
+    console.log(findWinner(playerHand, dealerHand));
+  }
+
+  let playAgain = '';
+  console.log('Would you like to play again? (Yes or No)'); //end game or ask user to play again?
+  playAgain = readline.question();
+
+  if (playAgain.toLowerCase() === 'no') {
+    console.log('Thanks for playing!');
+    break;
   } else {
-    console.log("You chose to stay");
+    console.log("You chose to stay!");
+    console.log("_________________________\n");
   }
 }
 //- repeat until bust or stay
