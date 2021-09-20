@@ -1,7 +1,5 @@
 const readline = require("readline-sync");
 
-//1. Initialize deck
-
 function handAsString(cards) {
   let str = '';
   cards.forEach(card => {
@@ -13,27 +11,45 @@ function handAsString(cards) {
   });
   return str;
 }
+function prompt(str) {
+  console.log(`=> ${str}`);
+}
+
+function validAnswer(str) {
+  while (!['y', 'n'].includes(str)) {
+    prompt("That is not a valid answer. Please enter (Y or N)");
+    str = readline.question()[0].toLowerCase();
+  }
+  return str;
+}
+
+function validGameChoice(str) {
+  while (!['h', 's'].includes(str)) {
+    prompt("That is not a valid answer. Please enter (Hit or Stay)");
+    str = readline.question()[0].toLowerCase();
+  }
+  return str;
+}
 
 function handValue(cards) {
   let sumOfCards = 0;
   let values = cards.map(card => card[1]);
   values.forEach(value => {
-    if (value === "A") {
+    if (value === "Ace") {
       sumOfCards += 11;
-    } else if (['J', 'Q', 'K'].includes(value)) {
+    } else if (['Jack', 'Queen', 'King'].includes(value)) {
       sumOfCards += 10;
     } else {
       sumOfCards += Number(value);
     }
   });
 
-  values.filter(value => value === "A").forEach(_ => {
+  values.filter(value => value === "Ace").forEach(_ => {
     if (sumOfCards > 21) sumOfCards -= 10;
   });
 
   return sumOfCards;
 }
-//console.log(handValue([['C', '2'], ['S', '5'] ,['H', 'Ace']]));
 
 function shuffle(array) {
   for (let index = array.length - 1; index > 0; index--) {
@@ -62,9 +78,6 @@ function busted(cards) {
   }
 }
 
-//2. Deal cards to player and dealer
-
-//3. Player turn: hit or stay
 while (true) {
   let deck = [
     ['S', '2'],['S', '3'],['S', '4'],['S', '5'],['S', '2'],['S', '6'],['S', '7'],['S', '8'],['S', '9'],['S', '10'], //spade numbers
@@ -85,15 +98,15 @@ while (true) {
   dealerHand.push(deck.pop());
   dealerHand.push(deck.pop());
 
-  console.log(`Dealer has: ${dealerHand[0][1]} and an unknown card`);
-  console.log(`You have: ${playerHand[0][1]} and ${playerHand[1][1]}`);
+  prompt(`Dealer has: ${dealerHand[0][1]} and an unknown card`);
+  prompt(`You have: ${playerHand[0][1]} and ${playerHand[1][1]}`);
 
   let bust = false;
   while (true) {
-    console.log("hit or stay?");
-    let answer = readline.question();
-
-    if (answer.toLowerCase() === 'stay') {
+    prompt("Hit or Stay?");
+    let answer = readline.question()[0].toLowerCase();
+    answer = validGameChoice(answer);
+    if (answer.toLowerCase() === 's') {
       break;
     }
 
@@ -104,20 +117,21 @@ while (true) {
       bust = true;
       break;
     }
-    console.log(`You currently have: ${handAsString(playerHand)}`);
+    prompt(`You currently have: ${handAsString(playerHand)}`);
   }
   let playAgain = '';
   if (bust === true) {
-    console.log('You have busted! The Dealer wins!');
-    console.log('Would you like to play again? (Yes or No)');
-    playAgain = readline.question();
+    prompt('You have busted! The Dealer wins!');
+    prompt('Would you like to play again? (Y or N)');
+    playAgain = readline.question()[0].toLowerCase();
+    playAgain = validAnswer(playAgain);
   }
 
-  if (playAgain.toLowerCase() === 'yes') {
-    console.log("You chose to play again!");
-    console.log("_________________________\n");
+  if (playAgain === 'y') {
+    prompt("You chose to play again!");
+    prompt("_________________________\n");
     continue;
-  } else if (playAgain.toLowerCase() === 'no') {
+  } else if (playAgain.toLowerCase() === 'n') {
     break;
   }
 
@@ -126,37 +140,33 @@ while (true) {
 
     if (busted(playerHand)) break;
   }
-  console.log(`You have: ${handAsString(playerHand)}`);
-  console.log(`The Dealer has: ${handAsString(dealerHand)}`);
+  prompt(`You have: ${handAsString(playerHand)}`);
+  prompt(`The Dealer has: ${handAsString(dealerHand)}`);
 
 
   if (busted(dealerHand)) {
-    console.log("The Dealer has busted! You win!");
+    prompt("The Dealer has busted! You win!");
     bust = busted(dealerHand);
   } else if (busted(playerHand)) {
-    console.log('You have busted! The Dealer wins!');
+    prompt('You have busted! The Dealer wins!');
     bust = busted(playerHand);
   }
   if (!findWinner(playerHand, dealerHand) && !bust) {
-    console.log("It's a tie!");
+    prompt("It's a tie!");
   } else if (!bust) {
-    console.log(findWinner(playerHand, dealerHand));
+    prompt(findWinner(playerHand, dealerHand));
   }
 
-  console.log('Would you like to play again? (Yes or No)'); //end game or ask user to play again?
-  playAgain = readline.question();
+  prompt('Would you like to play again? (Y or N)'); //end game or ask user to play again?
+  playAgain = readline.question()[0].toLowerCase();
+  playAgain = validAnswer(playAgain);
 
-  if (playAgain.toLowerCase() === 'no') {
-    console.log('Thanks for playing!');
+  if (playAgain === 'n') {
+    prompt('Thanks for playing!');
     break;
   } else {
-    console.log("You chose to play again!");
+    prompt("You chose to play again!");
     console.log("_________________________\n");
   }
 }
-//- repeat until bust or stay
-//4. If player bust, dealer wins.
-//5. Dealer turn: hit or stay
-//- repeat until total >= 17
-//6. If dealer busts, player wins.
-//7. Compare cards and declare winner.
+
