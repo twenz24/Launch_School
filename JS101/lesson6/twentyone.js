@@ -2,22 +2,6 @@ const readline = require("readline-sync");
 
 //1. Initialize deck
 
-const VALUES = {
-  2: 2,
-  3: 3,
-  4: 4,
-  5: 5,
-  6: 6,
-  7: 7,
-  8: 8,
-  9: 9,
-  10: 10,
-  Jack: 10,
-  Queen: 10,
-  King: 10,
-  Ace: [1, 11]
-};
-
 function handAsString(cards) {
   let str = '';
   cards.forEach(card => {
@@ -32,18 +16,21 @@ function handAsString(cards) {
 
 function handValue(cards) {
   let sumOfCards = 0;
-  cards.forEach(card => {
-    if (typeof VALUES[card[1]] === "object") {
-      let aceValues = VALUES['Ace'];
-      if (sumOfCards + aceValues[1] <= 21) {
-        sumOfCards += aceValues[1];
-      } else {
-        sumOfCards += aceValues[0];
-      }
+  let values = cards.map(card => card[1]);
+  values.forEach(value => {
+    if (value === "A") {
+      sumOfCards += 11;
+    } else if (['J', 'Q', 'K'].includes(value)) {
+      sumOfCards += 10;
     } else {
-      sumOfCards += VALUES[card[1]];
+      sumOfCards += Number(value);
     }
   });
+
+  values.filter(value => value === "A").forEach(_ => {
+    if (sumOfCards > 21) sumOfCards -= 10;
+  });
+
   return sumOfCards;
 }
 //console.log(handValue([['C', '2'], ['S', '5'] ,['H', 'Ace']]));
@@ -98,17 +85,40 @@ while (true) {
   dealerHand.push(deck.pop());
   dealerHand.push(deck.pop());
 
-  console.log(`Dealer has: ${dealerHand[0][1]} and unknown card`);
+  console.log(`Dealer has: ${dealerHand[0][1]} and an unknown card`);
   console.log(`You have: ${playerHand[0][1]} and ${playerHand[1][1]}`);
 
+  let bust = false;
   while (true) {
     console.log("hit or stay?");
     let answer = readline.question();
 
-    if (answer === 'stay' || busted(playerHand)) break;
+    if (answer.toLowerCase() === 'stay') {
+      break;
+    }
 
     playerHand.push(deck.pop());
+
+    if (busted(playerHand)) {
+      console.log(`You currently have: ${handAsString(playerHand)}`);
+      bust = true;
+      break;
+    }
     console.log(`You currently have: ${handAsString(playerHand)}`);
+  }
+  let playAgain = '';
+  if (bust === true) {
+    console.log('You have busted! The Dealer wins!');
+    console.log('Would you like to play again? (Yes or No)');
+    playAgain = readline.question();
+  }
+
+  if (playAgain.toLowerCase() === 'yes') {
+    console.log("You chose to play again!");
+    console.log("_________________________\n");
+    continue;
+  } else if (playAgain.toLowerCase() === 'no') {
+    break;
   }
 
   while (handValue(dealerHand) < 17) {
@@ -120,7 +130,6 @@ while (true) {
   console.log(`The Dealer has: ${handAsString(dealerHand)}`);
 
 
-  let bust = false;
   if (busted(dealerHand)) {
     console.log("The Dealer has busted! You win!");
     bust = busted(dealerHand);
@@ -134,7 +143,6 @@ while (true) {
     console.log(findWinner(playerHand, dealerHand));
   }
 
-  let playAgain = '';
   console.log('Would you like to play again? (Yes or No)'); //end game or ask user to play again?
   playAgain = readline.question();
 
@@ -142,7 +150,7 @@ while (true) {
     console.log('Thanks for playing!');
     break;
   } else {
-    console.log("You chose to stay!");
+    console.log("You chose to play again!");
     console.log("_________________________\n");
   }
 }
