@@ -42,8 +42,7 @@ utf16Value(OMEGA + OMEGA + OMEGA);  // 2811
 
 function utf16Value(str) {
   let sum = 0;
-  let charArr = str.split('');
-  charArr.forEach(char => {
+  str.split('').forEach(char => {
     sum += char.charCodeAt();
   });
   return sum;
