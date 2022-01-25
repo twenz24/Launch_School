@@ -1,5 +1,6 @@
 const readline = require('readline-sync');
 
+const messages = require('./calculator_messages.json');
 
 function invalidNumber(number) {
   return number.trimStart() === '' || Number.isNaN(Number(number));
@@ -14,25 +15,25 @@ while (true) {
   prompt('Welcome to Calculator!');
 
   // Ask the user for the first number.
-  prompt("What's the first number?");
+  prompt(messages["first number"]);
   let number1 = readline.question();
 
   while (invalidNumber(number1)) {
-    prompt("Hmm... that doesn't look like a valid number.");
+    prompt(messages["invalid number"]);
     number1 = readline.question();
   }
 
   // Ask the user for the second number.
-  prompt("What's the second number?");
+  prompt(messages["second number"]);
   let number2 = readline.question();
 
   while (invalidNumber(number2)) {
-    prompt("Hmm... that doesn't look like a valid number.");
+    prompt(messages["invalid number"]);
     number2 = readline.question();
   }
 
   // Ask the user for an operation to perform.
-  prompt('What operation would you like to perform?\n1) Add 2) Subtract 3) Multiply 4) Divide');
+  prompt(messages["operator"]);
   let operation = readline.question();
 
   while (!['1', '2', '3', '4'].includes(operation)) {
@@ -61,7 +62,7 @@ while (true) {
   // Print the result to the terminal.
   prompt(`The result is: ${output}`);
 
-  prompt('Would you like perform another calculation? (yes or no)');
+  prompt(messages["again"]);
   let performAgain = readline.question();
 
   if (performAgain[0].toLowerCase() === 'n') {
