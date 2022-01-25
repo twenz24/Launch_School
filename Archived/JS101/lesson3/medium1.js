@@ -4,7 +4,7 @@ for (let num = 0; num < 10; num++) {
   let newPhrase = phrase.padStart(num + phrase.length, " ");
   console.log(newPhrase);
 }
-//Q2
+//Q22
 let munstersDescription = "The Munsters are creepy and spooky.";
 let newMunstersDescription = "";
 for (let index = 0; index <= munstersDescription.length; index++) {
