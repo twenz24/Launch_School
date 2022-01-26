@@ -4,28 +4,52 @@ function prompt(message) {
   console.log(`=> ${message}`);
 }
 
-prompt('Welcome to the Loan Calculator!');
+function invalidNumber(number) {
+  if (number < 1 && number > 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
-prompt('Please enter your anticipated loan amount: ');
-let loanAmount = Number(readline.question());
-let annualPercentage;
+while (true) {
 
-prompt('Now please enter your Annual Percentage Rate or APR (X.XX):');
-annualPercentage = Number(readline.question());
+  prompt('Welcome to the Loan Calculator!');
 
-prompt('Please also enter the duration of FULL years the loan will be for:');
-let fullYearDuration = Number(readline.question());
+  prompt('Please enter your anticipated loan amount: ');
+  let loanAmount = Number(readline.question());
+  let annualPercentage;
 
-prompt(`Are there any additional months on the loan past the full ${fullYearDuration} input above? If so, please enter the number of months below. If there are no additional months, please enter 0.`);
-let additionalMonthDuration = Number(readline.question());
+  prompt('Now please enter your Annual Percentage Rate or APR (X.XX):');
+  annualPercentage = Number(readline.question());
 
-let monthlyIntRate = annualPercentage / 12;
+  while (!invalidNumber(annualPercentage)) {
+    prompt('That is not a valid APR. Please enter the APR as a decimal (X.XX)');
+    annualPercentage = readline.question();
+  }
 
-let totalMonthsOfLoan = (fullYearDuration * 12) + additionalMonthDuration;
+  prompt('Please also enter the duration of FULL years the loan will be for:');
+  let fullYearDuration = Number(readline.question());
 
-let monthlyPayment = (loanAmount *
-(monthlyIntRate / Math.pow((1 + monthlyIntRate), (-totalMonthsOfLoan))));
+  prompt(`Are there any additional months on the loan past the full ${fullYearDuration} years input above? If so, please enter the number of months below. If there are no additional months, please enter 0.`);
+  let additionalMonthDuration = Number(readline.question());
 
-let monthlyPaymentDisplayed = monthlyPayment.toFixed(2);
+  let monthlyIntRate = annualPercentage / 12;
 
-prompt(`Your monthly payment on your ${fullYearDuration} year, ${additionalMonthDuration} month loan is $${monthlyPaymentDisplayed}!`);
+  let totalMonthsOfLoan = (fullYearDuration * 12) + additionalMonthDuration;
+
+  let monthlyPayment = loanAmount *
+      (monthlyIntRate /
+      (1 - Math.pow((1 + monthlyIntRate), (-totalMonthsOfLoan))));
+
+  let monthlyPaymentDisplayed = monthlyPayment.toFixed(2);
+
+  prompt(`Your monthly payment on your ${fullYearDuration} year, ${additionalMonthDuration} month loan is $${monthlyPaymentDisplayed}!`);
+
+  prompt("Would you like to play again? (y or n)?");
+  let playAgain = readline.question();
+
+  if (playAgain[0].toLowerCase() !== 'y') {
+    break;
+  }
+}
