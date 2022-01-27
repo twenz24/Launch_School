@@ -48,6 +48,9 @@ function prompt(message) {
 let fullNameChoices = Object.values(VALID_CHOICES);
 let abbreviatedChoices = Object.keys(VALID_CHOICES);
 
+let userVictories = 0;
+let compVictories = 0;
+
 while (true) {
   prompt(`Choose one: ${fullNameChoices.join(', ')} or ${abbreviatedChoices.join(', ')} respectively`);
   let choice = readline.question();
@@ -66,6 +69,23 @@ while (true) {
   let computerChoice = fullNameChoices[randomIndex];
 
   displayWinner(choice, computerChoice);
+
+  if (userWins(choice, computerChoice)) {
+    userVictories += 1;
+  } else if (computerWins(choice, computerChoice)) {
+    compVictories += 1;
+  }
+
+  prompt(`The user has ${userVictories} wins. The computer has ${compVictories} wins.`);
+  if (userVictories === 3) {
+    prompt('You have won the series!');
+    userVictories = 0;
+    compVictories = 0;
+  } else if (compVictories === 3) {
+    prompt(`The computer has won the series!`);
+    userVictories = 0;
+    compVictories = 0;
+  }
 
   prompt('Do you want to play again (y/n)?');
   let answer = readline.question().toLowerCase();
