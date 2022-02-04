@@ -1,16 +1,34 @@
 const readline = require('readline-sync');
 const VALID_CHOICES = ['rock', 'paper', 'scissors'];
 
-function displayWinner(choice, computerChoice) {
-  prompt(`You chose ${choice}, computer chose ${computerChoice}`);
-
+function userWins(choice, computerChoice) {
   if ((choice === 'rock' && computerChoice === 'scissors') ||
     (choice === 'paper' && computerChoice === 'rock') ||
-    (choice === 'scissors' && computerChoice === 'paper')) {
-    prompt('You win!');
-  } else if ((choice === 'rock' && computerChoice === 'paper') ||
+    (choice === 'scissors' && computerChoice === 'paper') ||
+    (choice === 'spock' && computerChoice === 'rock') ||
+    (choice === 'lizard' && computerChoice === 'paper'))  {
+    return true;
+    } else {
+      return false;
+    }
+  
+function computerWins(choice, computerChoice) {
+  if ((choice === 'rock' && computerChoice === 'paper') ||
            (choice === 'paper' && computerChoice === 'scissors') ||
-           (choice === 'scissors' && computerChoice === 'rock')) {
+           (choice === 'scissors' && computerChoice === 'rock') ||
+           (choice === 'rock' && computerChoice === 'spock') ||
+           (choice === 'paper' && computerChoice === 'lizard')) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function displayWinner(choice, computerChoice) {
+  prompt(`You chose ${choice}, computer chose ${computerChoice}`);
+  if (userWins(choice, computerChoice)) {
+    prompt('You win!');
+  } else if (computerWins) {
     prompt('Computer wins!');
   } else {
     prompt("It's a tie");
