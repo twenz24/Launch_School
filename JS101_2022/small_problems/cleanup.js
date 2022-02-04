@@ -24,39 +24,42 @@ Examples/test Cases
 cleanUp("---what's my +*& line?");    // " what s my line "
 ____________________________________
 Data Structures, Algo
-given a string
-split string into individuals characters within an array
-check and see if those characters are indeed non - a characters
-  use charCode function to see if codes are between 065 and 122
-if so, replaced them with " "
-check and see if any of there are any consecutive spaces
-____________________________________
+a string is pass into the argument
+we need to:
+- check if the string contains any non-alphabetical symbols
+  - first we need to break the string into individual characters in an array
+  - iterate through the array and any non-a symbols will be replaced by " "
+    - non-a will be check by the unicode ranges
+- replace those non - a symbols
+- ensure that there are not consecutive spaces in the array
+  - create a new empty array
+  - iterate through the newly replaced array
+    - push all of the characters into the new array if they are not next to
+    another " " character
+
+    return the new array
 Code
 */
+function cleanUp(text) {
+  let cleanText = '';
 
-function cleanUp(str) {
-  let strArr = str.split('');
-  for (let index = 0; index < strArr.length; index++) {
-    if ((strArr[index].charCodeAt(0) >= 65 && strArr[index].charCodeAt(0) <= 90)
-    ||
-    (strArr[index].charCodeAt(0) <= 122 && strArr[index].charCodeAt(0) >= 97)) {
-      continue;
-    } else if (strArr[index] !== " ") {
-      strArr[index] = " ";
+  for (let idx = 0; idx < text.length; idx += 1) {
+    if (isLowerCaseLetter(text[idx]) || isUpperCaseLetter(text[idx])) {
+      cleanText += text[idx];
+    } else if (cleanText[cleanText.length - 1] !== ' ') {
+      cleanText += ' ';
     }
   }
-  return removeConsecutiveSpaces(strArr).join('');
+
+  return cleanText;
 }
 
-function removeConsecutiveSpaces(arr) {
-  let newArr = [];
-  for (let idx = 0; idx < arr.length; idx++) {
-    if (arr[idx] !== " " && arr[idx - 1] !== " ") {
-      newArr.push(arr[idx]);
-    }
-  }
-  return newArr;
+function isLowerCaseLetter(char) {
+  return char >= 'a' && char <= 'z';
 }
 
+function isUpperCaseLetter(char) {
+  return char >= 'A' && char <= 'Z';
+}
 
-console.log(cleanUp("---what's my +*& line?"));    // " what s my line "
+console.log(cleanUp("---what's my +*& line?"));
