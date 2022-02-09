@@ -7,6 +7,28 @@ const COMPUTER_MARKER = 'O';
 function prompt(string) {
   return console.log(`=> ${string}`);
 }
+/*
+
+take an array and return the string of the array with effects
+
+take an array joing them together with the specified deliminator
+
+then before the last index we want to add a conjuction
+
+*/
+function joinOr(arr, delimiter = ', ', word = 'or') {
+  switch (arr.length) {
+    case 0:
+      return '';
+    case 1:
+      return `${arr[0]}`;
+    case 2:
+      return arr.join(` ${word} `);
+    default:
+      return arr.slice(0, arr.length - 1).join(delimiter) +
+               `${delimiter}${word} ${arr[arr.length - 1]}`;
+  }
+}
 
 function displayBoard(board) {
   console.clear();
@@ -46,7 +68,7 @@ function playerChoosesSquare(board) {
   let square;
 
   while (true) {
-    prompt(`Choose a square (${emptySquares(board).join(', ')}):`);
+    prompt(`Choose a square (${joinOr(emptySquares(board))}):`);
     square = readline.question().trim();
     if (emptySquares(board).includes(square)) break;
 
