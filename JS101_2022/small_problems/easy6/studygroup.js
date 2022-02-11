@@ -7,7 +7,8 @@ any rules
 
 what its asking
 
-// You're given an array of integers. You must return the number of 'arithmetic progressions' of size 3 that are possible from that list.
+// You're given an array of integers. You must return the
+ number of 'arithmetic progressions' of size 3 that are possible from that list.
 
 // In each progression, the differences between the elements must be the same.
 
