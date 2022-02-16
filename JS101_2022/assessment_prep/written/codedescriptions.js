@@ -30,4 +30,17 @@ element
 
 the result is an array with all elements of the numbers array squared.
 
+
 */
+
+function myFunction() {
+  let a = 1;
+
+  if (true) {
+    console.log(a);
+    let a = 2;
+    console.log(a);
+  }
+}
+
+myFunction();
