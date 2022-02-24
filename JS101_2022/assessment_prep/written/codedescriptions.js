@@ -105,7 +105,7 @@ console.log(`two is: ${two}`);
 console.log(`three is: ${three}`);
 
 Description:
-
+deb
 implementation level
 On line 1, we declare the function messWithVars() that takes the arguments
 (one, two, three). Inside of the function scope. Within the function scope
@@ -127,13 +127,42 @@ global variable `three` to the array ['three'].
 
 Then on line 11, we invoke the function messWithVars passing the global
 variables, `one`, `two` and `three` as arguments. Since the function declaration
-referenced the locally scoped parameters `one` `two` and `three`, when we pass
+references the locally scoped parameters `one` `two` and `three`, when we pass
 the global variables one two and three, the local variables become a shadow of
 the global variables. Meaning, any assignment/reassignment that is done within
 the function scope will not be observed at the global level.
 
 thus, when we log the values of the global variables on line 13, 14, 15. The
 value of the one two and three global variables are ['one'], ['two'], and ['three']
-respectivley
+respectivley.
+
+#5
+let num = 5;
+
+if (num < 10) { // same as `if ((num < 10) === true)`
+  console.log("small number");
+} else {
+  console.log("large number");
+}
+
+Description
+
+user level information:
+
+This code is evaluating if a number is big or small. the threshold for this if
+the number is smaller than 10 it is a small number, other wise it is a large
+number
+
+implementation level
+
+on line 6, the code declares and initialized the `num` variable to the
+number `5`
+
+on line 3, we use if else block statements to evaluate the expression num < 10,
+if the statement evaluates to true then the code will call the console.log method
+and output the string "small number"
+
+if the expression does not evaluate to true, then the console.log method will be
+called with the argument "large number"
 
 */
