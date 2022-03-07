@@ -45,7 +45,6 @@ Code
 
 function palindromes(string) {
   let substringArr = substrings(string);
-  console.log(substringArr);
   return substringArr.filter(element => {
     if (element.length > 1) {
       return element === element.split('').reverse().join('');
@@ -61,6 +60,7 @@ function substrings(string) {
     let indexOfSub = string.indexOf((element));
     newArr = newArr.concat(leadingSubstrings(string.slice(indexOfSub)));
   });
+  console.log(newArr.slice(40));
   return newArr;
 }
 
@@ -73,4 +73,4 @@ function leadingSubstrings(str) {
 }
 
 
-console.log(palindromes('abcd'));
+console.log(palindromes('knitting cassettes'));

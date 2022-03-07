@@ -32,7 +32,7 @@ Data Structures, Algo
 given an array
 create amn empty array named fruitList
 iterate through each element in the passed array
-  while the index is less than the first index of the element
+  while the index is less than or equal to the index 1 of the element
     add the fruit specified to fruitList
 return fruitList
 
