@@ -2,20 +2,15 @@
 ____________________________________
 Problem
 
-find all of the palindromic substrings in the string
+Input: given a string
+Output: find all of the palindromic substrings
 
-Input: string
-Output: array of palindromic substrings
-
-Rules:
-- palindrome is case sensitive
-- and special character sensitive
+Rules: anything split by a non letter character is not a palindrome
 
 Questions:
 
 ____________________________________
 Examples/test Cases
-
 palindromes('abcd');       // []
 palindromes('madam');      // [ "madam", "ada" ]
 
@@ -30,37 +25,27 @@ palindromes('knitting cassettes');
 // [ "nittin", "itti", "tt", "ss", "settes", "ette", "tt" ]
 ____________________________________
 Data Structures, Algo
+
 given a string
-create a new array
-take the passed string and split it up into all of the possible substrings
-iterate through that substring array and check if the current substring
-  equals the current substring reversed.
-  if so,
-  add that substring to the newArr
-return the newArr
+create a variable that stores all of the substrings into an array
+iterate through the array
+  if the element within the array is the same reversed
+    add that element to the new array
+return the new array
 ____________________________________
 Code
+
+!newArr.includes(substringArr[index])
 */
-
-
-function palindromes(string) {
-  let substringArr = substrings(string);
-  return substringArr.filter(element => {
-    if (element.length > 1) {
-      return element === element.split('').reverse().join('');
-    } else {
-      return false;
-    }
-  });
-}
 
 function substrings(string) {
   let newArr = [];
-  string.split('').forEach(element => {
-    let indexOfSub = string.indexOf((element));
+  let maxIndex = Math.floor(string.length / 2);
+  let stringArr = string.split(' ');
+  for (let index = 0; index < maxIndex; index += 1) {
+    let indexOfSub = string.indexOf((stringArr[index]));
     newArr = newArr.concat(leadingSubstrings(string.slice(indexOfSub)));
-  });
-  console.log(newArr.slice(40));
+  }
   return newArr;
 }
 
@@ -72,5 +57,20 @@ function leadingSubstrings(str) {
   });
 }
 
+// function palindromes(string) {
+//   let substringArr = substrings(string);
+//   let newArr = [];
+//   for (let index = 0; index < substringArr.length; index += 1) {
+//     if (substringArr[index].length < 2) {
+//       continue;
+//     } else {
+//       let reversedElement = substringArr[index].split('').reverse().join('');
+//       if (substringArr[index] ===  reversedElement) {
+//         newArr.push(substringArr[index]);
+//       }
+//     }
+//   }
+//   return newArr;
+// }
 
-console.log(palindromes('knitting cassettes'));
+console.log(substrings('knitting cassettes'));

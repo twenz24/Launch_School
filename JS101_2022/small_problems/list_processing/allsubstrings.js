@@ -40,7 +40,6 @@ function substrings(string) {
   let newArr = [];
   string.split('').forEach(element => {
     let indexOfSub = string.indexOf((element));
-    console.log(leadingSubstrings(string.slice(indexOfSub)));
     newArr = newArr.concat(leadingSubstrings(string.slice(indexOfSub)));
   });
   return newArr;
@@ -54,4 +53,4 @@ function leadingSubstrings(str) {
   });
 }
 
-console.log(substrings('abcde'));
+console.log(substrings('madam'));
