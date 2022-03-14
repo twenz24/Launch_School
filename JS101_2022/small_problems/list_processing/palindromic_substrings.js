@@ -38,39 +38,32 @@ Code
 !newArr.includes(substringArr[index])
 */
 
+
 function substrings(string) {
-  let newArr = [];
-  let maxIndex = Math.floor(string.length / 2);
-  let stringArr = string.split(' ');
-  for (let index = 0; index < maxIndex; index += 1) {
-    let indexOfSub = string.indexOf((stringArr[index]));
-    newArr = newArr.concat(leadingSubstrings(string.slice(indexOfSub)));
+  let substrings = [];
+  for (let startIndex = 0; startIndex < string.length; startIndex += 1) {
+    let substring = string.substring(startIndex);
+    substrings = substrings.concat(leadingSubstrings(substring));
   }
-  return newArr;
+
+  return substrings;
 }
 
-function leadingSubstrings(str) {
-  let currentSub = "";
-  return str.split('').map(char => {
-    currentSub += char;
-    return currentSub;
-  });
+function leadingSubstrings(string) {
+  let substrings = [];
+  for (let length = 1; length <= string.length; length += 1) {
+    substrings.push(string.slice(0, length));
+  }
+
+  return substrings;
+}
+function isPalindrome(word) {
+  return word.length > 1 && word === word.split("").reverse().join("");
 }
 
-// function palindromes(string) {
-//   let substringArr = substrings(string);
-//   let newArr = [];
-//   for (let index = 0; index < substringArr.length; index += 1) {
-//     if (substringArr[index].length < 2) {
-//       continue;
-//     } else {
-//       let reversedElement = substringArr[index].split('').reverse().join('');
-//       if (substringArr[index] ===  reversedElement) {
-//         newArr.push(substringArr[index]);
-//       }
-//     }
-//   }
-//   return newArr;
-// }
+function palindromes(string) {
+  return substrings(string).filter(isPalindrome);
+}
 
-console.log(substrings('knitting cassettes'));
+
+console.log(palindromes('knitting cassettes'));

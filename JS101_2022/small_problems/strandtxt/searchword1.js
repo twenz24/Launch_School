@@ -7,6 +7,7 @@ Output: the number of times the word is in the string
 
 Rules:
 word and string will always be provided
+case does not matter
 
 Questions:
 Do we need to filter out non letter characters included in a word?
