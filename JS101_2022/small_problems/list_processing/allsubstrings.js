@@ -36,23 +36,13 @@ ____________________________________
 Code
 */
 
-/* function substrings(string) {
+function substrings(string) {
   let newArr = [];
   string.split('').forEach(element => {
     let indexOfSub = string.indexOf((element));
     newArr = newArr.concat(leadingSubstrings(string.slice(indexOfSub)));
   });
   return newArr;
-} */
-
-function substrings(string) {
-  let substrings = [];
-  for (let startIndex = 0; startIndex < string.length; startIndex += 1) {
-    let substring = string.substring(startIndex);
-    substrings = substrings.concat(leadingSubstrings(substring));
-  }
-
-  return substrings;
 }
 
 function leadingSubstrings(str) {
