@@ -55,9 +55,12 @@ function transpose(array) {
     return element.slice();
   });
   let answerArr = [];
-  for (let index = 0; index < copyArr[0].length; index += 1) {
-    let newArr = [copyArr[0][index], copyArr[1][index], copyArr[2][index]];
-    answerArr.push(newArr);
+  for (let outer = 0; outer < copyArr[outer].length; outer += 1) {
+    for (let inner = 0; inner < copyArr.length; inner += 1) {
+      let newArr = [copyArr[inner][outer], copyArr[inner][outer],
+        copyArr[inner][outer]];
+      answerArr.push(newArr);
+    }
   }
   return answerArr;
 }
