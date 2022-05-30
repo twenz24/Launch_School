@@ -179,6 +179,18 @@ class TTTGame {
     console.log("Thanks for playing Tic Tac Toe! Goodbye!");
   }
 
+  joinOr(arr, char = ',', delim = 'or') {
+    let copyArr = arr.slice();
+    if (copyArr.length > 2) {
+      copyArr.splice(arr.length - 1, 0, delim);
+      return copyArr.join(`${char} `);
+    } else if (copyArr.length === 2) {
+      return copyArr.join(` ${delim} `);
+    } else {
+      return copyArr.join('');
+    }
+  }
+
   isWinner(player) {
     return TTTGame.POSSIBLE_WINNING_ROWS.some(row => {
       return this.board.countMarkersFor(player, row) === 3;
@@ -203,7 +215,7 @@ class TTTGame {
 
     while (true) {
       let validChoices = this.board.unusedSquares();
-      const prompt = `Choose a square (${validChoices.join(", ")}): `;
+      const prompt = `Choose a square (${this.joinOr(validChoices)}): `;
       choice = readline.question(prompt);
 
       if (validChoices.includes(choice)) break;
@@ -233,6 +245,15 @@ class TTTGame {
     return this.isWinner(this.human) || this.isWinner(this.computer);
   }
 }
+let joinOr = function(arr, char = ',', delim = 'or') {
+  if (arr.length > 2) {
+    return arr.splice(arr.length - 2, 0, delim).join(`${char} `);
+  } else if (arr.length === 2) {
+    return arr.join(` ${delim} `);
+  } else {
+    return arr.join('');
+  }
+};
 
 let game = new TTTGame();
 game.play();
