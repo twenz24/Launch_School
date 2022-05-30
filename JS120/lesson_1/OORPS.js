@@ -26,7 +26,6 @@ const readline = require('readline-sync');
 function createComputer() {
   let playerObject = createPlayer();
 
-
   let computerObject = {
     choose() {
       const choices = ['rock', 'paper', 'scissors'];
