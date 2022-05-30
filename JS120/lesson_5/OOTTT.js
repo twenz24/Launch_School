@@ -56,10 +56,6 @@ class Square {
 
 class Board {
   constructor() {
-    //STUB - we'll talk about stubs a bit later
-    // We need a way to model the 3x3 grid. Perhaps "squares"?
-    // What data structure should we use? An Array? An Object? Something else?
-    // What should the data structure store? Strings? Numbers? Square objects?
     this.squares = {};
     for (let counter = 1; counter <= 9; ++counter) {
       this.squares[String(counter)] = new Square();
@@ -132,41 +128,59 @@ class Computer extends Player {
 
 class TTTGame {
   constructor() {
-    //STUB
-    // Need a board and two players
     this.board = new Board();
     this.human = new Human();
     this.computer = new Computer();
   }
   static POSSIBLE_WINNING_ROWS = [
-    [ "1", "2", "3" ],            // top row of board
-    [ "4", "5", "6" ],            // center row of board
-    [ "7", "8", "9" ],            // bottom row of board
-    [ "1", "4", "7" ],            // left column of board
-    [ "2", "5", "8" ],            // middle column of board
-    [ "3", "6", "9" ],            // right column of board
-    [ "1", "5", "9" ],            // diagonal: top-left to bottom-right
-    [ "3", "5", "7" ],            // diagonal: bottom-left to top-right
+    [ "1", "2", "3" ],
+    [ "4", "5", "6" ],
+    [ "7", "8", "9" ],
+    [ "1", "4", "7" ],
+    [ "2", "5", "8" ],
+    [ "3", "6", "9" ],
+    [ "1", "5", "9" ],
+    [ "3", "5", "7" ],
   ];
   play() {
-    //SPIKE
     this.displayWelcomeMessage();
-
-    this.board.display();
     while (true) {
+      this.board.display();
+      while (true) {
 
-      this.humanMoves();
-      if (this.gameOver()) break;
+        this.humanMoves();
+        if (this.gameOver()) break;
 
-      this.computerMoves();
-      if (this.gameOver()) break;
+        this.computerMoves();
+        if (this.gameOver()) break;
+
+        this.board.displayWithClear();
+      }
 
       this.board.displayWithClear();
+      this.displayResults();
+      if (!this.playAgain()) break;
+      this.resetBoard();
     }
-
-    this.board.displayWithClear();
-    this.displayResults();
     this.displayGoodbyeMessage();
+  }
+
+  playAgain() {
+    let answer;
+    while (true) {
+      console.log(`Would you like to play again? (y or n)`);
+      answer = readline.question();
+      if (answer.toLowerCase() === 'n' || answer.toLowerCase() === 'y') break;
+      console.log('That is not a valid answer. Please input "y" or "n"');
+    }
+    return answer.toLowerCase() === 'y';
+  }
+
+  resetBoard() {
+    this.board.displayWithClear();
+    this.board = new Board();
+    this.human = new Human();
+    this.computer = new Computer();
   }
 
   displayWelcomeMessage() {
@@ -210,7 +224,7 @@ class TTTGame {
     return this.board.squares[this.choice] === " ";
   }
 
-  humanMoves() { // was firstPlayerMoves
+  humanMoves() {
     let choice;
 
     while (true) {
@@ -224,10 +238,9 @@ class TTTGame {
       console.log("");
     }
     this.board.markSquareAt(choice, this.human.getMarker());
-    // mark the selected square with the human's marker
   }
 
-  computerMoves() { // was secondPlayerMoves
+  computerMoves() {
     let validChoices = this.board.unusedSquares();
     let choice;
 
@@ -245,15 +258,6 @@ class TTTGame {
     return this.isWinner(this.human) || this.isWinner(this.computer);
   }
 }
-let joinOr = function(arr, char = ',', delim = 'or') {
-  if (arr.length > 2) {
-    return arr.splice(arr.length - 2, 0, delim).join(`${char} `);
-  } else if (arr.length === 2) {
-    return arr.join(` ${delim} `);
-  } else {
-    return arr.join('');
-  }
-};
 
 let game = new TTTGame();
 game.play();
