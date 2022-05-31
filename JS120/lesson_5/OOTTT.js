@@ -210,18 +210,20 @@ class TTTGame {
   }
 
   pickCenterSquare() {
-    return this.board.isUnusedSquare("5") ? "5" : null;
+    return this.board.unusedSquares().includes("5") ? "5" : null;
   }
 
 
   findWinningSquare(player) {
-    let winningPostitions = TTTGame.POSSIBLE_WINNING_ROWS.find(row => {
+    let winningPositions = TTTGame.POSSIBLE_WINNING_ROWS.find(row => {
       return this.board.countMarkersFor(player, row) === 2 &&
         row.some(square => this.board.unusedSquares().includes(square));
     });
-    return winningPostitions.find(key => {
-      return this.board.squares[key].getMarker() === Square.UNUSED_SQUARE;
-    });
+    console.log(winningPositions);
+    return winningPositions === undefined ? undefined :
+      winningPositions.find(key => {
+        return this.board.squares[key].getMarker() === Square.UNUSED_SQUARE;
+      });
   }
 
   displayResults() {
