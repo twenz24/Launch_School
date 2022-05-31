@@ -264,17 +264,16 @@ class TTTGame {
     let choice;
     if (this.isAThreat(this.computer)) {
       choice = this.neutralizeThreat(this.computer);
-      this.board.markSquareAt(choice, this.computer.getMarker());
     } else if (this.isAThreat(this.human)) {
       choice = this.neutralizeThreat(this.human);
-      this.board.markSquareAt(choice, this.computer.getMarker());
+    } else if (this.board.unusedSquares().includes('5')) {
+      choice = '5';
     } else {
       do {
         choice = Math.floor((9 * Math.random()) + 1).toString();
       } while (!validChoices.includes(choice));
-      console.log(this.computer.getMarker());
-      this.board.markSquareAt(choice, this.computer.getMarker());
     }
+    this.board.markSquareAt(choice, this.computer.getMarker());
   }
 
   gameOver() {
