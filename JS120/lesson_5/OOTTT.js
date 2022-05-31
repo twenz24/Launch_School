@@ -56,9 +56,13 @@ class Square {
 
 class Board {
   constructor() {
+    this.reset();
+  }
+
+  reset() {
     this.squares = {};
     for (let counter = 1; counter <= 9; ++counter) {
-      this.squares[String(counter)] = new Square();
+      this.squares[counter] = new Square();
     }
   }
 
@@ -105,10 +109,19 @@ class Board {
 class Player {
   constructor(marker) {
     this.marker = marker;
+    this.score = 0;
   }
 
   getMarker() {
     return this.marker;
+  }
+
+  getScore() {
+    return this.score;
+  }
+
+  incrementScore() {
+    this.score += 1;
   }
 }
 
@@ -130,6 +143,7 @@ class TTTGame {
     this.human = new Human();
     this.computer = new Computer();
   }
+  static MATCH_GOAL = 3;
   static POSSIBLE_WINNING_ROWS = [
     [ "1", "2", "3" ],
     [ "4", "5", "6" ],
@@ -140,27 +154,38 @@ class TTTGame {
     [ "1", "5", "9" ],
     [ "3", "5", "7" ],
   ];
+
   play() {
     this.displayWelcomeMessage();
     while (true) {
-      this.board.display();
-      while (true) {
-
-        this.humanMoves();
-        if (this.gameOver()) break;
-
-        this.computerMoves();
-        if (this.gameOver()) break;
-
-        this.board.displayWithClear();
+      this.playOneGame();
+      if (this.matchOver()) {
+        this.displayMatchWinner();
+        break;
       }
-
-      this.board.displayWithClear();
-      this.displayResults();
       if (!this.playAgain()) break;
-      this.resetGame();
+
+      console.log("Let's play again!");
     }
     this.displayGoodbyeMessage();
+  }
+
+  playOneGame() {
+    this.board.reset();
+    this.board.display();
+    while (true) {
+      this.humanMoves();
+      if (this.gameOver()) break;
+
+      this.computerMoves();
+      if (this.gameOver()) break;
+
+      this.board.displayWithClear();
+    }
+    this.addScore();
+    this.board.displayWithClear();
+    this.displayResults();
+    this.displayMatchScore();
   }
 
   playAgain() {
@@ -174,13 +199,6 @@ class TTTGame {
     return answer.toLowerCase() === 'y';
   }
 
-  resetGame() {
-    this.board.displayWithClear();
-    this.board = new Board();
-    this.human = new Human();
-    this.computer = new Computer();
-  }
-
   displayWelcomeMessage() {
     console.clear();
     console.log("Welcome to Tic Tac Toe!");
@@ -189,6 +207,27 @@ class TTTGame {
 
   displayGoodbyeMessage() {
     console.log("Thanks for playing Tic Tac Toe! Goodbye!");
+  }
+
+  addScore() {
+    if (this.isWinner(this.computer)) {
+      this.computer.incrementScore();
+    } else if (this.isWinner(this.human)) {
+      this.human.incrementScore();
+    }
+  }
+
+  matchOver() {
+    return this.human.getScore() === TTTGame.MATCH_GOAL ||
+    this.computer.getScore() === TTTGame.MATCH_GOAL;
+  }
+
+  displayMatchWinner() {
+    if (this.human.score === TTTGame.MATCH_GOAL) {
+      console.log('You have won the match!');
+    } else if (this.computer.score === TTTGame.MATCH_GOAL) {
+      console.log('The computer has won the match!');
+    }
   }
 
   joinOr(arr, char = ',', delim = 'or') {
@@ -237,6 +276,10 @@ class TTTGame {
   }
   validChoice() {
     return this.board.squares[this.choice] === " ";
+  }
+
+  displayMatchScore() {
+    console.log(`Your score is ${this.human.score}. The computer's score is ${this.computer.score}.`);
   }
 
   humanMoves() {
