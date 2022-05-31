@@ -64,8 +64,6 @@ class Board {
 
   displayWithClear() {
     console.clear();
-    console.log("");
-    console.log("");
     this.display();
   }
 
@@ -211,21 +209,17 @@ class TTTGame {
     });
   }
 
-  isAThreat(player) {
-    let threatPostitions = TTTGame.POSSIBLE_WINNING_ROWS.find(row => {
-      return this.board.countMarkersFor(player, row) === 2 &&
-        row.some(square => this.board.unusedSquares().includes(square));
-    });
-    return threatPostitions !== undefined;
+  pickCenterSquare() {
+    return this.board.isUnusedSquare("5") ? "5" : null;
   }
 
-  //need to account for only finding pairs thats third spot is unused
-  neutralizeThreat(player) {
-    let threatPostitions = TTTGame.POSSIBLE_WINNING_ROWS.find(row => {
+
+  findWinningSquare(player) {
+    let winningPostitions = TTTGame.POSSIBLE_WINNING_ROWS.find(row => {
       return this.board.countMarkersFor(player, row) === 2 &&
         row.some(square => this.board.unusedSquares().includes(square));
     });
-    return threatPostitions.find(key => {
+    return winningPostitions.find(key => {
       return this.board.squares[key].getMarker() === Square.UNUSED_SQUARE;
     });
   }
@@ -260,24 +254,32 @@ class TTTGame {
   }
 
   computerMoves() {
-    let validChoices = this.board.unusedSquares();
-    let choice;
-    if (this.isAThreat(this.computer)) {
-      choice = this.neutralizeThreat(this.computer);
-    } else if (this.isAThreat(this.human)) {
-      choice = this.neutralizeThreat(this.human);
-    } else if (this.board.unusedSquares().includes('5')) {
-      choice = '5';
-    } else {
-      do {
-        choice = Math.floor((9 * Math.random()) + 1).toString();
-      } while (!validChoices.includes(choice));
+    let choice = this.findWinningSquare(this.computer);
+    if (!choice) {
+      choice = this.findWinningSquare(this.human);
+    }
+    if (!choice) {
+      choice = this.pickCenterSquare();
+    }
+    if (!choice) {
+      choice = this.pickRandomSquare();
     }
     this.board.markSquareAt(choice, this.computer.getMarker());
   }
 
   gameOver() {
     return this.board.isFull() || this.someoneWon();
+  }
+
+  pickRandomSquare() {
+    let validChoices = this.board.unusedSquares();
+    let choice;
+
+    do {
+      choice = Math.floor((9 * Math.random()) + 1).toString();
+    } while (!validChoices.includes(choice));
+
+    return choice;
   }
 
   someoneWon() {
