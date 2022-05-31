@@ -160,7 +160,7 @@ class TTTGame {
       this.board.displayWithClear();
       this.displayResults();
       if (!this.playAgain()) break;
-      this.resetBoard();
+      this.resetGame();
     }
     this.displayGoodbyeMessage();
   }
@@ -176,7 +176,7 @@ class TTTGame {
     return answer.toLowerCase() === 'y';
   }
 
-  resetBoard() {
+  resetGame() {
     this.board.displayWithClear();
     this.board = new Board();
     this.human = new Human();
@@ -208,6 +208,25 @@ class TTTGame {
   isWinner(player) {
     return TTTGame.POSSIBLE_WINNING_ROWS.some(row => {
       return this.board.countMarkersFor(player, row) === 3;
+    });
+  }
+
+  isAThreat(player) {
+    let threatPostitions = TTTGame.POSSIBLE_WINNING_ROWS.find(row => {
+      return this.board.countMarkersFor(player, row) === 2 &&
+        row.some(square => this.board.unusedSquares().includes(square));
+    });
+    return threatPostitions !== undefined;
+  }
+
+  //need to account for only finding pairs thats third spot is unused
+  neutralizeThreat(player) {
+    let threatPostitions = TTTGame.POSSIBLE_WINNING_ROWS.find(row => {
+      return this.board.countMarkersFor(player, row) === 2 &&
+        row.some(square => this.board.unusedSquares().includes(square));
+    });
+    return threatPostitions.find(key => {
+      return this.board.squares[key].getMarker() === Square.UNUSED_SQUARE;
     });
   }
 
@@ -243,11 +262,19 @@ class TTTGame {
   computerMoves() {
     let validChoices = this.board.unusedSquares();
     let choice;
-
-    do {
-      choice = Math.floor((9 * Math.random()) + 1).toString();
-    } while (!validChoices.includes(choice));
-    this.board.markSquareAt(choice, this.computer.getMarker());
+    if (this.isAThreat(this.computer)) {
+      choice = this.neutralizeThreat(this.computer);
+      this.board.markSquareAt(choice, this.computer.getMarker());
+    } else if (this.isAThreat(this.human)) {
+      choice = this.neutralizeThreat(this.human);
+      this.board.markSquareAt(choice, this.computer.getMarker());
+    } else {
+      do {
+        choice = Math.floor((9 * Math.random()) + 1).toString();
+      } while (!validChoices.includes(choice));
+      console.log(this.computer.getMarker());
+      this.board.markSquareAt(choice, this.computer.getMarker());
+    }
   }
 
   gameOver() {
