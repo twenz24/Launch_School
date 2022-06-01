@@ -142,6 +142,7 @@ class TTTGame {
     this.board = new Board();
     this.human = new Human();
     this.computer = new Computer();
+    this.firstPlayer = this.human;
   }
   static MATCH_GOAL = 3;
   static POSSIBLE_WINNING_ROWS = [
@@ -155,6 +156,10 @@ class TTTGame {
     [ "3", "5", "7" ],
   ];
 
+  recordGame() {
+    this.gameCount += 1;
+  }
+
   play() {
     this.displayWelcomeMessage();
     while (true) {
@@ -164,23 +169,36 @@ class TTTGame {
         break;
       }
       if (!this.playAgain()) break;
-
+      this.firstPlayer = this.togglePlayer(this.firstPlayer);
       console.log("Let's play again!");
     }
     this.displayGoodbyeMessage();
   }
 
+  togglePlayer(player) {
+    return player === this.human ? this.computer : this.human;
+  }
+
+  playerMoves(currentPlayer) {
+    if (currentPlayer === this.human) {
+      this.humanMoves();
+    } else {
+      this.computerMoves();
+    }
+  }
+
   playOneGame() {
+    let currentPlayer = this.firstPlayer;
+
     this.board.reset();
     this.board.display();
-    while (true) {
-      this.humanMoves();
-      if (this.gameOver()) break;
 
-      this.computerMoves();
+    while (true) {
+      this.playerMoves(currentPlayer);
       if (this.gameOver()) break;
 
       this.board.displayWithClear();
+      currentPlayer = this.togglePlayer(currentPlayer);
     }
     this.addScore();
     this.board.displayWithClear();
@@ -207,6 +225,10 @@ class TTTGame {
 
   displayGoodbyeMessage() {
     console.log("Thanks for playing Tic Tac Toe! Goodbye!");
+  }
+
+  playersMakeMoves() {
+    this.humanMoves();
   }
 
   addScore() {
@@ -258,7 +280,6 @@ class TTTGame {
       return this.board.countMarkersFor(player, row) === 2 &&
         row.some(square => this.board.unusedSquares().includes(square));
     });
-    console.log(winningPositions);
     return winningPositions === undefined ? undefined :
       winningPositions.find(key => {
         return this.board.squares[key].getMarker() === Square.UNUSED_SQUARE;
