@@ -1,13 +1,15 @@
-/*
-if the human user has 2 of the 3 squares to win the game, select the 3rd square
-  we want to go through the board and see what positions the player has marked
-    return true if two out of the 3 winning psotiions for a
-    given set are marked by the human
-  
-if not pick random
-*/
-let a = [["a" , 1],["b" , 2], ["c" , 3]];
+function adjustAces(currentScoresArr) {
+  while (true) {
+    let score = currentScoresArr.reduce((a, b) => a + b, 0);
+    if (score <= 21) break;
+    else {
+      let index = currentScoresArr.findIndex(card => card === 11);
+      if (index === -1) break;
+      currentScoresArr[index] = 1;
+    }
+  }
+  return currentScoresArr;
+}
 
-let b = a.map(card => card[1]);
-
-console.log(b);
+let a = [11, 11, 11, 11, 10];
+console.log(adjustAces(a));
