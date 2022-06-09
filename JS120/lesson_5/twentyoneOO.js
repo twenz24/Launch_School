@@ -1,19 +1,12 @@
-let shuffle = require('shuffle-array'),
-  collection = [["Spade", "2"],["Spade", "3"], ["Spade", "4"],["Spade", "5"],["Spade", "6"],["Spade", "7"],
-    ["Spade", "8"],["Spade", "9"],["Spade", "10"],["Spade", "Jack"],["Spade", "Queen"],["Spade", "King"],["Spade", "Ace"],["Club", "2"],["Club", "3"], ["Club", "4"],["Club", "5"],["Club", "6"],["Club", "7"],
-    ["Club", "8"],["Club", "9"],["Club", "10"],["Club", "Jack"],["Club", "Queen"],["Club", "King"],["Club", "Ace"],["Heart", "2"],["Heart", "3"], ["Heart", "4"],["Heart", "5"],["Heart", "6"],["Heart", "7"],
-    ["Heart", "8"],["Heart", "9"],["Heart", "10"],["Heart", "Jack"],["Heart", "Queen"],["Heart", "King"],["Heart", "Ace"],["Diamond", "2"],["Diamond", "3"], ["Diamond", "4"],["Diamond", "5"],["Diamond", "6"],["Diamond", "7"],
-    ["Diamond", "8"],["Diamond", "9"],["Diamond", "10"],["Diamond", "Jack"],["Diamond", "Queen"],["Diamond", "King"],["Diamond", "Ace"]];
+let shuffle = require('shuffle-array');
 
 let readline = require("readline-sync");
 
 class Deck {
   constructor() {
+    this.values = ["Queen", "King", "Jack", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+    this.suits = ["Heart", "Spade", "Diamond", "Club"];
     this.reset();
-    this.values = {
-      2 : 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9,
-      10: 10, Jack: 10, Queen: 10, King: 10, Ace: 11
-    };
   }
 
   shuffleCards() {
@@ -33,7 +26,17 @@ class Deck {
   }
 
   reset() {
-    this.cards = collection.slice();
+    this.cards = this.getDeck();
+  }
+
+  getDeck() {
+    let returnArr = [];
+    this.suits.forEach(suit => {
+      this.values.forEach(value => {
+        returnArr.push([suit, value]);
+      });
+    });
+    return returnArr;
   }
 
   deal() {
@@ -43,12 +46,8 @@ class Deck {
 
 class Participant {
   constructor() {
-    //STUB
     this.score = 0;
     this.hand = [];
-    // What sort of state does a participant need?
-    // Score? Hand? Amount of money available?
-    // What else goes here? all the redundant behaviors from Player and Dealer?
   }
   isBusted() {
     return this.score > 21;
@@ -69,10 +68,8 @@ class Participant {
 
 class Player extends Participant {
   constructor() {
-    //STUB
     super();
     this.wallet = 5;
-    // Score? Hand? Amount of money available?
   }
 
   reduceWallet() {
@@ -93,7 +90,6 @@ class Player extends Participant {
 }
 
 class Dealer extends Participant {
-  // Very similar to a Player; do we need this?
 
   constructor() {
     super();
@@ -320,7 +316,7 @@ class TwentyOneGame {
       if (this.deck.isNumberedCard(card)) {
         cardVals.push(Number(card));
       } else if (this.deck.isFaceCard(card)) {
-        cardVals.push(10); // value of face cards
+        cardVals.push(10);
       } else {
         cardVals.push(11);
       }
